@@ -1,6 +1,6 @@
-# Bloodborne – Lovecův deník
+# Bloodborne – Lovcův deník
 
-Interaktivní timeline bossů Bloodborne. Pořadí vychází z [boss orderu na Escapist Magazine](https://www.escapistmagazine.com/heres-the-best-bloodborne-boss-order-all-bosses-in-game/), mezi jednotlivé bosse jsou doplněné věci, které bys neměl minout (NPC questy, klíčové itemy, zbraně, runy a deadliny).
+Interaktivní timeline bossů Bloodborne. Mezi jednotlivé bosse jsou doplněné věci, které bys neměl minout (NPC questy, klíčové itemy, zbraně, runy a deadliny).
 
 ## Jak to otevřít
 
@@ -15,7 +15,7 @@ start index.html
 ## Co to umí
 
 - 22 bossů včetně 5 bossů z DLC `The Old Hunters`.
-- 81 „neminuout“ úkolů rozdělených mezi jednotlivé kroky.
+- „neminout“ úkoly rozdělených mezi jednotlivé kroky.
 - Odškrtávání bossů i jednotlivých úkolů.
 - Progress bar a počty pro bosse a missables.
 - Filtry `Vše` / `Bez DLC` / `Jen DLC` a přepínač `Skrýt splněné`.
