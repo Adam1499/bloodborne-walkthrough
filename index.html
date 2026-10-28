@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bloodborne – Lovcův deník</title>
+  <meta name="description" content="Timeline bossů Bloodborne podle Escapist Magazine, doplněná o věci, které bys neměl minout.">
+  <style>
+    :root {
+      --bg: #0c0b0d;
+      --bg-soft: #120f13;
+      --panel: #1b161d;
+      --panel-2: #141014;
+      --text: #e7dfd2;
+      --muted: #9a8f86;
+      --blood: #a31f2b;
+      --blood-bright: #d64545;
+      --gold: #c9a86a;
+      --line: #3a2e35;
+      --ok: #7d9b6a;
+      --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+      --sans: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(900px 520px at 50% -8%, rgba(163, 31, 43, 0.20), transparent 62%),
+        radial-gradient(700px 480px at 85% 18%, rgba(201, 168, 106, 0.05), transparent 60%),
+        radial-gradient(800px 600px at 8% 55%, rgba(80, 20, 40, 0.12), transparent 65%),
+        var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.012) 0, rgba(255, 255, 255, 0.012) 1px, transparent 1px, transparent 4px),
+        radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.55) 100%);
+      opacity: 0.8;
+    }
+
+    a { color: var(--gold); }
+    a:hover { color: #e4cb95; }
+
+    .wrap {
+      width: min(980px, calc(100% - 32px));
+      margin: 0 auto;
+      padding-bottom: 80px;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      padding: 72px 0 30px;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero .eyebrow {
+      margin: 0;
+      font-size: 0.68rem;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.9;
+    }
+
+    .hero h1 {
+      margin: 0.12em 0 0;
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: clamp(2.8rem, 9vw, 5.4rem);
+      line-height: 0.98;
+      letter-spacing: 0.13em;
+      text-indent: 0.13em;
+      color: #f0e7da;
+      text-shadow:
+        0 0 34px rgba(163, 31, 43, 0.30),
+        0 2px 0 rgba(0, 0, 0, 0.45);
+    }
+
+    .hero .subtitle {
+      max-width: 640px;
+      margin: 16px auto 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .hero .rule {
+      width: 140px;
+      height: 1px;
+      margin: 26px auto 18px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0.8;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px 22px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: #82766c;
+      font-size: 0.74rem;
+    }
+
+    .legend li { display: inline-flex; align-items: center; gap: 7px; }
+
+    .legend .diamond {
+      width: 8px;
+      height: 8px;
+      transform: rotate(45deg);
+      border: 1px solid var(--gold);
+      display: inline-block;
+    }
+
+    .legend .circle {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid rgba(201, 168, 106, 0.55);
+      display: inline-block;
+    }
+
+    /* ---------- Sticky dashboard ---------- */
+    .dashboard {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      margin: 6px -10px 38px;
+      padding: 14px 16px;
+      border: 1px solid rgba(201, 168, 106, 0.18);
+      border-radius: 14px;
+      background: rgba(12, 11, 13, 0.84);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.40);
+    }
+
+    .progress-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 6px 16px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .progress-head strong {
+      color: var(--text);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .progress-head .detail {
+      color: #7e736a;
+      font-size: 0.72rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .progress-track {
+      position: relative;
+      height: 8px;
+      margin-top: 8px;
+      border-radius: 999px;
+      background: #221a1e;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #5e1119, var(--blood-bright) 62%, var(--gold));
+      box-shadow: 0 0 14px rgba(214, 69, 69, 0.35);
+      transition: width 0.35s ease;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .segmented {
+      display: inline-flex;
+      gap: 2px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #120f13;
+    }
+
+    .segmented button {
+      border: 0;
+      border-radius: 7px;
+      padding: 6px 11px;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 0.76rem;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .segmented button:hover { color: var(--text); }
+
+    .segmented button.active {
+      background: #2a1b20;
+      color: var(--text);
+      box-shadow: inset 0 0 0 1px rgba(201, 168, 106, 0.22);
+    }
+
+    .switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .switch input {
+      appearance: none;
+      -webkit-appearance: none;
+      position: relative;
+      width: 36px;
+      height: 20px;
+      margin: 0;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #241b20;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .switch input::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--muted);
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .switch input:checked {
+      background: #4a1219;
+      border-color: #7d2a32;
+    }
+
+    .switch input:checked::after {
+      transform: translateX(16px);
+      background: var(--gold);
+    }
+
+    .switch input:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+    }
+
+    .reset {
+      margin-left: auto;
+      padding: 6px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 0.76rem;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .reset:hover { color: var(--text); border-color: var(--blood); }
+
+    /* ---------- Timeline ---------- */
+    .timeline {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 31px;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: linear-gradient(180deg, transparent, var(--line) 4%, var(--line) 96%, transparent);
+    }
+
+    .step {
+      position: relative;
+      display: grid;
+      grid-template-columns: 64px minmax(0, 1fr);
+      gap: 18px;
+      padding-bottom: 22px;
+    }
+
+    .step.hidden { display: none; }
+
+    .marker {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      padding-top: 18px;
+    }
+
+    .node-boss {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      border: 1px solid rgba(201, 168, 106, 0.38);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 32% 28%, #2c1f25, #120f13 68%);
+      box-shadow:
+        0 0 0 4px var(--bg),
+        0 0 22px rgba(163, 31, 43, 0.16);
+      color: var(--gold);
+      font-family: var(--serif);
+      font-size: 1.02rem;
+      font-variant-numeric: tabular-nums;
+      transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
+    }
+
+    .node-task {
+      position: relative;
+      z-index: 1;
+      width: 14px;
+      height: 14px;
+      margin-top: 22px;
+      transform: rotate(45deg);
+      border: 1px solid var(--gold);
+      background: #1c1519;
+      box-shadow: 0 0 0 4px var(--bg);
+    }
+
+    .step.is-done .node-boss {
+      border-color: var(--ok);
+      color: var(--ok);
+      box-shadow:
+        0 0 0 4px var(--bg),
+        0 0 20px rgba(125, 155, 106, 0.16);
+    }
+
+    .step.is-done .node-task {
+      border-color: var(--ok);
+      background: #283021;
+    }
+
+    .card {
+      border: 1px solid rgba(201, 168, 106, 0.13);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(28, 23, 28, 0.92), rgba(18, 15, 19, 0.92));
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+      padding: 20px 22px;
+      transition: opacity 0.2s, border-color 0.2s;
+    }
+
+    .boss-card { border-left: 2px solid rgba(163, 31, 43, 0.65); }
+
+    .step.is-done .card { opacity: 0.62; }
+
+    .boss-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      line-height: 1.5;
+    }
+
+    .tag.required {
+      color: var(--gold);
+      border-color: rgba(201, 168, 106, 0.40);
+      background: rgba(201, 168, 106, 0.07);
+    }
+
+    .tag.optional {
+      color: #b7a58f;
+      border-color: #4a3a32;
+    }
+
+    .tag.dlc {
+      color: #a9b7d6;
+      border-color: #3b4560;
+      background: rgba(80, 100, 160, 0.08);
+    }
+
+    .tag.ending {
+      color: #e0c9a0;
+      border-color: rgba(201, 168, 106, 0.55);
+      background: rgba(201, 168, 106, 0.10);
+    }
+
+    h2 {
+      margin: 0;
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: clamp(1.45rem, 3vw, 1.95rem);
+      line-height: 1.15;
+      letter-spacing: 0.01em;
+      color: #ece2d4;
+    }
+
+    .area {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .area::before {
+      content: "◆";
+      margin-right: 6px;
+      color: var(--blood-bright);
+      font-size: 0.55rem;
+      vertical-align: middle;
+    }
+
+    .boss-check {
+      display: inline-flex;
+      flex-shrink: 0;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #141014;
+      color: var(--muted);
+      font-size: 0.76rem;
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .boss-check:hover { color: var(--text); border-color: #6d2b34; }
+
+    .boss-check input,
+    .task input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .checkmark {
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      border: 1px solid #6b5a4a;
+      border-radius: 4px;
+      background: #0f0c0f;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .checkmark::after {
+      content: "";
+      width: 8px;
+      height: 4px;
+      margin-top: -2px;
+      border-left: 2px solid var(--gold);
+      border-bottom: 2px solid var(--gold);
+      transform: rotate(-45deg) scale(0);
+      transition: transform 0.15s;
+    }
+
+    input:checked + .checkmark {
+      border-color: var(--gold);
+      background: #2a1f12;
+    }
+
+    input:checked + .checkmark::after { transform: rotate(-45deg) scale(1); }
+
+    input:focus-visible + .checkmark {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+    }
+
+    .note {
+      margin: 12px 0 0;
+      color: #c9beb2;
+      font-size: 0.92rem;
+    }
+
+    .tips {
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .tips li { margin: 4px 0; }
+    .tips li::marker { color: var(--blood-bright); }
+
+    .group-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 6px 12px;
+      margin-bottom: 10px;
+    }
+
+    .group-kicker {
+      color: var(--blood-bright);
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .group-head h2 { font-size: clamp(1.15rem, 2.4vw, 1.45rem); }
+
+    .deadline {
+      display: inline-block;
+      padding: 2px 8px;
+      border: 1px solid rgba(163, 31, 43, 0.36);
+      border-radius: 999px;
+      background: rgba(163, 31, 43, 0.08);
+      color: #d9a3a3;
+      font-size: 0.66rem;
+      line-height: 1.5;
+    }
+
+    .tasks {
+      display: grid;
+      gap: 1px;
+      margin-top: 2px;
+    }
+
+    .task {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 0 -8px;
+      padding: 7px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .task:hover { background: rgba(255, 255, 255, 0.025); }
+
+    .task .checkmark {
+      width: 15px;
+      height: 15px;
+      margin-top: 2px;
+    }
+
+    .task-text {
+      color: #d6ccc0;
+      font-size: 0.89rem;
+    }
+
+    .task input:checked ~ .task-text {
+      color: #7d746b;
+      text-decoration: line-through;
+      text-decoration-color: rgba(163, 31, 43, 0.6);
+    }
+
+    .task.hidden { display: none; }
+
+    /* ---------- Cheat sheet ---------- */
+    .cheatsheet {
+      margin-top: 48px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(20, 16, 20, 0.72);
+      overflow: hidden;
+    }
+
+    .cheatsheet summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      cursor: pointer;
+      list-style: none;
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      color: #e4d8c8;
+    }
+
+    .cheatsheet summary::-webkit-details-marker { display: none; }
+
+    .cheatsheet summary::after {
+      content: "+";
+      color: var(--gold);
+      font-family: var(--sans);
+      font-size: 1.4rem;
+      line-height: 1;
+    }
+
+    .cheatsheet[open] summary::after { content: "−"; }
+
+    .cheatsheet .hint {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      letter-spacing: 0;
+    }
+
+    .table-wrap {
+      padding: 0 20px 20px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    th, td {
+      padding: 9px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--gold);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    td:first-child {
+      color: #e4d8c8;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    td:last-child { color: #bdb1a4; }
+
+    .callout {
+      margin-top: 24px;
+      padding: 16px 18px;
+      border: 1px dashed rgba(201, 168, 106, 0.24);
+      border-radius: 12px;
+      background: rgba(201, 168, 106, 0.035);
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .callout strong { color: var(--gold); font-weight: 600; }
+
+    .footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px 24px;
+      margin-top: 44px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: #756b63;
+      font-size: 0.72rem;
+    }
+
+    .to-top {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 40;
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: rgba(20, 16, 20, 0.92);
+      color: var(--gold);
+      font-size: 1.1rem;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, border-color 0.2s;
+    }
+
+    .to-top:hover { border-color: var(--gold); }
+    .to-top.visible { opacity: 1; pointer-events: auto; }
+
+    @media (max-width: 640px) {
+      .wrap { width: calc(100% - 24px); padding-bottom: 60px; }
+      .hero { padding: 48px 0 24px; }
+      .dashboard { margin-left: -4px; margin-right: -4px; padding: 12px; }
+      .timeline::before { left: 15px; }
+      .step { grid-template-columns: 32px minmax(0, 1fr); gap: 10px; }
+      .marker { padding-top: 16px; }
+      .node-boss {
+        width: 30px;
+        height: 30px;
+        font-size: 0.7rem;
+        box-shadow: 0 0 0 3px var(--bg);
+      }
+      .node-task {
+        width: 10px;
+        height: 10px;
+        margin-top: 20px;
+        box-shadow: 0 0 0 3px var(--bg);
+      }
+      .card { padding: 16px; }
+      .boss-top { flex-direction: column; gap: 10px; }
+      .boss-check { align-self: flex-start; }
+      .reset { margin-left: 0; }
+      .task { margin: 0 -4px; padding: 7px 4px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        color: #111;
+      }
+      body::before,
+      .dashboard,
+      .to-top,
+      .footer,
+      .legend { display: none; }
+      .wrap { width: 100%; padding: 0; }
+      .hero { padding: 0 0 16px; }
+      .hero h1 { color: #111; text-shadow: none; }
+      .hero .subtitle, .hero .eyebrow { color: #444; }
+      .card, .cheatsheet {
+        background: #fff;
+        border-color: #bbb;
+        box-shadow: none;
+      }
+      .step { break-inside: avoid; }
+      .timeline::before { background: #ccc; }
+      .task-text, .note, .tips, .area, .group-head h2, h2 { color: #111; }
+      .tag, .deadline { color: #333; border-color: #999; background: none; }
+      .step.is-done .card { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <p class="eyebrow">Lovcův deník</p>
+      <h1>BLOODBORNE</h1>
+      <p class="subtitle">Timeline bossů podle Escapist Magazine, doplněná o věci, které bys mezi jednotlivými kroky neměl minout.</p>
+      <div class="rule" aria-hidden="true"></div>
+      <ul class="legend" aria-label="Legenda">
+        <li><span class="circle" aria-hidden="true"></span> číslo = boss v pořadí</li>
+        <li><span class="diamond" aria-hidden="true"></span> neminuout</li>
+        <li>22 bossů včetně DLC</li>
+        <li>progress se ukládá v prohlížeči</li>
+      </ul>
+    </header>
+
+    <section class="dashboard" aria-label="Postup a filtry">
+      <div class="progress-head">
+        <span>Celkový postup</span>
+        <span class="detail" id="progressDetail">Bossové 0/22 · Neminuout 0/0</span>
+        <strong id="progressText">0 / 0 hotovo</strong>
+      </div>
+      <div class="progress-track" role="progressbar" aria-label="Celkový postup" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="controls">
+        <div class="segmented" role="group" aria-label="Filtr obsahu">
+          <button type="button" data-filter="all" class="active">Vše</button>
+          <button type="button" data-filter="nodlc">Bez DLC</button>
+          <button type="button" data-filter="dlc">Jen DLC</button>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="hideDone">
+          <span>Skrýt splněné</span>
+        </label>
+        <button type="button" class="reset" id="resetBtn">Reset</button>
+      </div>
+    </section>
+
+    <main>
+      <ol class="timeline" id="timeline"></ol>
+
+      <details class="cheatsheet">
+        <summary>
+          <span>
+            Rychlý tahák: NPC, deadline a odměna
+            <span class="hint">Kdo zmizí, když to nestihneš — a co za to dostaneš.</span>
+          </span>
+        </summary>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>NPC</th>
+                <th>Deadline</th>
+                <th>Proč to řešit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Gilbert</td>
+                <td>Po Gascoignovi, před Amelií</td>
+                <td>Flamesprayer zdarma. Po Amelii už jen nákup za 8 000 echoes.</td>
+              </tr>
+              <tr>
+                <td>Young Yharnam Girl</td>
+                <td>Music Box před Gascoignem; brož/kapli před Romem</td>
+                <td>Tiny Music Box pomůže v boss fightu; po Romovi pokračuje sestra a ribbon quest.</td>
+              </tr>
+              <tr>
+                <td>Eileen the Crow</td>
+                <td>Henryk před vstupem do Forbidden Woods; Bloody Crow po Romovi</td>
+                <td>Crow Hunter Badge, Blade of Mercy a covenant Hunter of Hunters.</td>
+              </tr>
+              <tr>
+                <td>Arianna</td>
+                <td>Do Oedon Chapel před Blood Moon</td>
+                <td>Její krev a po Micolashovi One Third of Umbilical Cord. Neber si krev 3×, pokud máš Adellu.</td>
+              </tr>
+              <tr>
+                <td>Adella</td>
+                <td>Hypogean Gaol po BSB, před Blood Moon</td>
+                <td>Oedon Writhe runa a krev; bez Church oblečení s tebou nemluví. Pozor na Ariannu.</td>
+              </tr>
+              <tr>
+                <td>Iosefka</td>
+                <td>Nezabíjet před Romem</td>
+                <td>Po Romovi dropne One Third of Umbilical Cord.</td>
+              </tr>
+              <tr>
+                <td>Alfred</td>
+                <td>Cathedral Ward (Lower Chapel, pak balkon nad Forbidden Woods); Cainhurst až po Unopened Summons</td>
+                <td>Unopened Summons z Queen's Chamber rozhodne, jestli zabije Annalise. Odměna Wheel Hunter Badge, Roar; po jeho smrti Radiance runa.</td>
+              </tr>
+              <tr>
+                <td>Annalise</td>
+                <td>Cainhurst, až po Logariusovi + Crown of Illusions</td>
+                <td>Vileblood covenant a Corruption runa. Po Alfredovi ji můžeš oživit v Altar of Despair (Queenly Flesh).</td>
+              </tr>
+              <tr>
+                <td>Valtr</td>
+                <td>Forbidden Woods</td>
+                <td>League a Impurity runa; summon do boss fightů.</td>
+              </tr>
+              <tr>
+                <td>Djura</td>
+                <td>Old Yharnam</td>
+                <td>Přátelství = gesto; zabití = Powder Keg Hunter Badge. Pro přátelství jdi zezadu od Paarla a nezabíjej beast enemies.</td>
+              </tr>
+              <tr>
+                <td>Simon</td>
+                <td>DLC, každá lokace</td>
+                <td>Underground Cell Inner Chamber Key a loot.</td>
+              </tr>
+              <tr>
+                <td>Adeline</td>
+                <td>DLC, Research Hall</td>
+                <td>Brain Fluid quest → Balcony Key a Milkweed runa.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <aside class="callout">
+        <strong>Chalice dungeons nejsou v seznamu.</strong> Článek je vynechává a jsou to samostatné, volitelné dungeony. První Pthumeru Chalice dropne Blood-Starved Beast; pokud je chceš hrát, začni klidně už po něm.
+      </aside>
+    </main>
+
+    <footer class="footer">
+      <span>Pořadí bossů: <a href="https://www.escapistmagazine.com/heres-the-best-bloodborne-boss-order-all-bosses-in-game/" target="_blank" rel="noopener">Escapist Magazine</a>. Neminuout a doporučení: tento deník.</span>
+      <span>Ukládá se pouze do localStorage tohoto prohlížeče.</span>
+    </footer>
+  </div>
+
+  <button type="button" class="to-top" id="toTop" aria-label="Zpět nahoru">↑</button>
+
+  <script>
+    const STORAGE_KEY = "bloodborne-timeline-v1";
+
+    const STEPS = [
+      {
+        kind: "tasks",
+        title: "Prolog: Central Yharnam",
+        intro: "Než se pustíš do prvního bosse, projdi úvodní oblast a začni questy, které mají deadline.",
+        tasks: [
+          { id: "intro-weapon", text: "Vyber si startovní zbraň: Saw Cleaver je nejuniverzálnější, Hunter Axe má reach, Threaded Cane sedne skill buildům." },
+          { id: "intro-gilbert", text: "Mluv s Gilbertem v okně u prvního lampu. Později ti dá Flamesprayer — ale jen do doby, než zabiješ Amelii." },
+          { id: "intro-eileen", text: "Najdi Eileen the Crow na Dry Docku nad kanály (rozbij sudy vpravo) a promluv s ní dvakrát. Začneš její quest a dostaneš gesto + Bold Hunter's Marks." },
+          { id: "intro-girl", text: "Najdi dcerku v okně (Young Yharnam Girl) přes kanály a vezmi si Tiny Music Box. Během Gascoigneho fightu ho použij — na chvíli ho omráčí." },
+          { id: "intro-loot", text: "V kanálech seber Saw Spear a otevři si zkratky: bránu u lampu i cestu k Tomb of Oedon. Ušetříš tím spoustu běhání." }
+        ]
+      },
+      {
+        kind: "boss",
+        title: "Cleric Beast",
+        area: "Central Yharnam",
+        optional: true,
+        note: "Volitelný, ale dropne Sword Hunter Badge. Ten odemkne nákup Kirkhammeru a Hunter Chief Emblem u Bath Messenger.",
+        tips: [
+          "Útoč na nohy a ocas; když spadne, přejdi na hlavu.",
+          "Oheň a Molotovy fungují. Neboj se ustoupit a healovat."
+        ]
+      },
+      {
+        kind: "tasks",
+        title: "Před Father Gascoignem",
+        area: "Central Yharnam",
+        tasks: [
+          { id: "gascoigne-emblem", text: "Kup Hunter Chief Emblem (10 000 echoes) u Bath Messenger, jakmile máš Sword Hunter Badge. Otevře hlavní bránu ke Grand Cathedral. Alternativa je obejít to přes Old Yharnam a Blood-Starved Beast." },
+          { id: "gascoigne-musicbox", text: "Před fightem si vezmi Tiny Music Box. Funguje i v poslední fázi a dává ti okno na zdarma hit." }
+        ]
+      },
+      {
+        kind: "boss",
+        title: "Father Gascoigne",
+        area: "Central Yharnam",
+        note: "Dropne Oedon Tomb Key. Použij Tiny Music Box (až 3×) a v poslední fázi se hodí parry.",
+        tips: [
+          "V první fázi ho nech zaútočit a trestuj po dodge. Hudební skříňka ho omráčí.",
+          "Ve druhé fázi je agresivnější — drž si odstup a parryuj jeho výpady."
+        ]
+      },
+      {
+        kind: "tasks",
+        title: "Po Gascoignovi",
+        deadline: "Před Blood-Starved Beast",
+        area: "Central Yharnam",
+        tasks: [
+          { id: "gascoigne-bloodgem", text: "V knihovně hned za Tomb of Oedon vezmi Blood Gem Workshop Tool. Odemkne osazování blood gems — bez toho přicházíš o velký damage." },
+          { id: "gascoigne-brooch", text: "Najdi Red Jeweled Brooch na střeše u Tomb of Oedon. Skoč z ochozu u brány, kde je část zábradlí pryč." },
+          { id: "gascoigne-girl", text: "Vrať se k dcerce: dej jí brož, nebo ji pošli do Oedon Chapel. Quest pokračuje po Romovi (Red/White Messenger Ribbon)." },
+          { id: "gascoigne-oedon", text: "Otevři Oedon Chapel a mluv s Oedon Chapel Dwellerem. Odemkne posílání přeživších do kaple." }
+        ]
+      },
+      {
+        kind: "boss",
+        title: "Blood-Starved Beast",
+        area: "Old Yharnam",
+        optional: true,
+        note: "Volitelný, ale odemkne cestu do Healing Church Workshop a dropne Pthumeru Chalice (první chalice dungeon).",
+        tips: [
+          "Slabý na oheň — Molotovy a Flamesprayer. Použij Antidote proti poisonu.",
+          "Drž se jeho boku a nenech se zahnat do rohu."
+        ]
+      },
+      {
+        kind: "tasks",
+        title: "Po Blood-Starved Beast",
+        deadline: "Před Vicar Amelií",
+        area: "Cathedral Ward / Old Yharnam",
+        tasks: [
+          { id: "bsb-workshop", text: "V Oedon Chapel projdi dveřmi vpravo a výtahem do Healing Church Workshop. Odtud se dej dolů do Abandoned Old Workshop." },
+          { id: "bsb-abandoned", text: "V Abandoned Old Workshop vezmi One Third of Umbilical Cord, Doll Set, Old Hunter Bone a Small Hair Ornament." },
+          { id: "bsb-doll", text: "Small Hair Ornament dej panence v Hunter's Dream. Dostaneš Tear Stone a nový dialog." },
+          { id: "bsb-oldyharnam", text: "V Old Yharnam vezmi Charred Hunter Set (nejlepší fire resist) a Rifle Spear. Djuru nemusíš zabíjet — pokud ho chceš ušetřit, jdi zezadu od Paarla a nezabíjej beast enemies." }
+        ]
+      },
+      {
+        kind: "tasks",
+        title: "Před Vicar Amelií",
+        area: "Cathedral Ward",
+        tasks: [
+          { id: "amelia-flamesprayer", text: "Po Gascoignovi a návštěvě Cathedral Ward mluv s Gilbertem — dá ti Flamesprayer. Pokud nejdřív zabiješ Amelii, propásneš to a zbraň pak jen koupíš po Radiant Sword Hunter Badge." },
+          { id: "amelia-gate", text: "Otevři bránu ke Grand Cathedral: Hunter Chief Emblem (10k), nebo obejdi přes Blood-Starved Beast a Healing Church Workshop." },
+          { id: "amelia-eileen", text: "Po otevření bran Cathedral Ward mluv s Eileen před Oedon Chapel. Pak jdi do Tomb of Oedon a pomoz jí zabít Henryka — DŘÍV, než poprvé vstoupíš do Forbidden Woods. Jinak její quest selže. Nenech Eileen umřít, přišel bys o celou questovou linii." },
+          { id: "amelia-arianna", text: "Pošli Ariannu do Oedon Chapel. Musíš mít poraženého jednoho z bossů (BSB, Amelia nebo Witch) a musí to být před Blood Moon." },
+          { id: "amelia-alfred", text: "Mluv s Alfredem u malého oltáře před Lower Chapel v Cathedral Ward (obejdi budovu zleva kolem páky). Dá ti Fire Paper a gesto Pray; později se přesune na balkon nad vstupem do Forbidden Woods." },
+          { id: "amelia-adella", text: "V Hypogean Gaol (nech se unést Snatcherem) osvoboď Adellu. Mluv s ní v Church oblečení (např. Gascoigne's Set nebo Black Church Set) a pošli ji do Oedon Chapel. Pozor: když máš Adellu i Ariannu, neber Arianninu krev 3×." }
+        ]
+      },
+      {
+        kind: "boss",
+        title: "Vicar Amelia",
+        area: "Cathedral Ward",
+        note: "Dropne Gold Pendant — použij ho pro Gold Blood Gem (+12,6 % proti beastům). Po fightu se dotkni lebky na oltáři: otevře Forbidden Woods a spustí noc.",
+        tips: [
+          "Útoč na nohy. Když se začne healovat, je bezbranná — přeruš ji.",
+          "Oheň a serrated zbraně (Saw Cleaver/Spear) fungují dobře."
+        ]
+      },
+      {
+        kind: "tasks",
+        title: "Před Witch of Hemwick",
+        area: "Hemwick Charnel Lane",
+        tasks: [
+          { id: "witch-rune-tool", text: "Rune Workshop Tool je v malé místnosti za arénou Witch of Hemwick. Bez něj nemůžeš používat runy — nenech si ho ujít." },
+          { id: "witch-cainhurst", text: "Pokud máš Cainhurst Summons, po poražení Witch se u obelisku v Hemwick objeví kočár do Cainhurstu." },
+          { id: "witch-explore", text: "Projdi Hemwick Charnel Lane důkladně: jsou tu upgrady, runy a zkratky. Po získání toolu si v Hunter's Dream nasaď runy na Memory Altar." }
+        ]
+      },
+      {
+        kind: "boss",
+        title: "The Witch of Hemwick",
+        area: "Hemwick Charnel Lane",
+        optional: true,
+        note: "Volitelná, ale prakticky povinná: po fightu se otevře místnost s Rune Workshop Tool.",
+        tips: [
+          "Běž po obvodu místnosti a hledej čarodějnice v rozích. Stíny ignoruj.",
+          "Po zabití první se objeví druhá — nenech je oživit."
+        ]
+      },
+      {
+        kind: "tasks",
+        title: "Před Shadow of Yharnam",
+        area: "Forbidden Woods",
+        tasks: [
+          { id: "shadow-valtr", text: "Ve Forbidden Woods se přidej ke League u Valtrа v chatě vpravo od prvního lampu. Dostaneš runu Impurity a summon do boss fightů." },
+          { id: "shadow-tonsil", text: "Od prvního NPC v domě ve Forbidden Woods vezmi Tonsil Stone (Patches). Odemkne Lecture Building a Nightmare Frontier." },
+          { id: "shadow-cainhurst", text: "Projdi Subterranean Cave s jedovatým jezerem a vylez zadním vchodem do Iosefky. Na operačním stole je Cainhurst Summons." },
+          { id: "shadow-beggar", text: "Suspicious Beggar (žebrák) neposílej do Oedon Chapel — vyvraždí ostatní přeživší. Nech ho být, nebo ho pošli do Iosefky." },
+          { id: "shadow-iosefka", text: "Nezabíjej Iosefku před Romem. Po Romovi dropne One Third of Umbilical Cord." }
+        ]
+      },
+      {
+        kind: "boss",
+        title: "Shadow of Yharnam",
+        area: "Forbidden Woods",
+        note: "Tři protivníci. Po fightu se otevře cesta k Byrgenwerth a Romovi.",
+        tips: [
+          "Zabíjej je jednoho po druhém a využívej náhrobky jako kryt.",
+          "Nenech je přežít do fáze, kdy se transformují — tlač na jednoho."
+        ]
+      },
+      {
+        kind: "tasks",
+        title: "Před Rom, the Vacuous Spider",
+        area: "Byrgenwerth",
+        tasks: [
+          { id: "rom-point", text: "Rom je bod zlomu: po něm přijde Blood Moon a některé questy/rozhovory se uzavřou. Udělej teď, co chceš stihnout." },
+          { id: "rom-arianna", text: "Arianna musí být v Oedon Chapel. Před Blood Moon už ji nepošleš." },
+          { id: "rom-checks", text: "Zkontroluj Cainhurst Summons a Tonsil Stone. Cainhurst i Nightmare Frontier můžeš udělat i teď, pokud máš přístup." },
+          { id: "rom-iosefka", text: "Nezabíjej Iosefku — její cord získáš až po Romovi. Upgraduj zbraň a kup Blood Vials; Rom je první velký skill check." }
+        ]
+      },
+      {
+        kind: "boss",
+        title: "Rom, the Vacuous Spider",
+        area: "Moonside Lake",
+        note: "Po Romovi: Blood Moon, změní se svět a NPC. Vrať se k Iosefce zadním vchodem a vezmi si cord.",
+        tips: [
+          "Fáze 1: vyčisti pavouky po jednom, pak bij Roma.",
+          "Fáze 2: sleduj meteority a nenech se obklíčit. Útoč z boku."
+        ]
+      },
+      {
+        kind: "tasks",
+        title: "Po Romovi",
+        deadline: "Před The One Reborn",
+        area: "Yahar'gul / Iosefka's Clinic",
+        tasks: [
+          { id: "rom-iosefka-cord", text: "Zadním vchodem z Forbidden Woods jdi do Iosefky a zabij imposter Iosefku. Dropne One Third of Umbilical Cord. (Jen po Romovi!)" },
+          { id: "rom-adella", text: "V Hypogean Gaol zkontroluj Adellu. Pokud jsi ji ještě neposlal do kaple, udělej to — ale pozor na Ariannu." },
+          { id: "rom-upper-key", text: "V Yahar'gul Chapel vezmi Upper Cathedral Key. Odemkne Upper Cathedral Ward (Celestial Emissary, Ebrietas, Orphanage)." },
+          { id: "rom-tonitrus", text: "V Yahar'gulu u Hypogean Gaol lamp seber Tonitrus (blesková zbraň). Paarl dropne Spark Hunter Badge, který odemkne její nákup a Bolt Paper." }
+        ]
+      },
+      {
+        kind: "boss",
+        title: "Darkbeast Paarl",
+        area: "Hypogean Gaol",
+        optional: true,
+        note: "Volitelný. Dropne Spark Hunter Badge (Tonitrus a Bolt Paper). Po Romovi je přístupný i z Yahar'gulu.",
+        tips: [
+          "Oheň a útok na přední nohy; při staggeru na hlavu.",
+          "Pozor na elektřinu a na jeho skoky. Drž se u boků."
+        ]
+      },
+      {
+        kind: "tasks",
+        title: "Před The One Reborn",
+        area: "Yahar'gul, Unseen Village",
+        tasks: [
+          { id: "one-reborn-upper", text: "Máš Upper Cathedral Key z Yahar'gul Chapel? Upper Cathedral Ward je volitelná, ale obsahuje Celestial Emissary, Ebrietas a Orphanage." },
+          { id: "one-reborn-explore", text: "Projdi Yahar'gul důkladně. Pozor na Snatchery, bell-ringers a pasti; najdi zkratky a loot." },
+          { id: "one-reborn-logarius", text: "Cainhurst a Logarius můžeš udělat i před One Reborn, pokud máš Cainhurst Summons a poraženou Witch of Hemwick." }
+        ]
+      },
+      {
+        kind: "boss",
+        title: "The One Reborn",
+        area: "Yahar'gul, Unseen Village",
+        note: "Po něm se otevře cesta do Nightmare of Mensis.",
+        tips: [
+          "Vyčisti přivolané enemies, pak útoč na tělo. Vyhýbej se padajícím končetinám.",
+          "Když spadne, bij do hlavy/těla a nenech se obklíčit."
+        ]
+      },
+      {
+        kind: "tasks",
+        title: "Před Martyr Logarius (Cainhurst)",
+        area: "Forsaken Castle Cainhurst",
+        tasks: [
+          { id: "logarius-access", text: "Cainhurst potřebuje Cainhurst Summons + poraženou Witch of Hemwick. K obelisku v Hemwick přijede kočár." },
+          { id: "logarius-route", text: "Z Library Rooftop pokračuj skokem dolů přes střechy věží k mostu a žebříku; pro rychlý návrat z lampy Forsaken Castle Cainhurst použij výtah v Library 1F." },
+          { id: "logarius-loot", text: "V Cainhurstu seber Evelyn (Library 1F), Reiterpallasch (Entrance Hall) a Knight Set (Secluded Reading Room). Knight's Wig je na Library Rooftop — je to jen head armor, žádný questový item." }
+        ]
+      },
+      {
+        kind: "boss",
+        title: "Martyr Logarius",
+        area: "Forsaken Castle Cainhurst",
+        optional: true,
+        note: "Volitelný, ale dropne Crown of Illusions. Po fightu se objeví lampa Logarius' Seat. Nasaď si Crown u trůnu — odhalí cestu k Annalise.",
+        tips: [
+          "Parry je klíč. V první fázi využívej sloupy.",
+          "Pozor na arcane orby a agresivní druhou fázi."
+        ]
+      },
+      {
+        kind: "tasks",
+        title: "Po Logariusovi: Queen's Chamber a Alfred",
+        area: "Forsaken Castle Cainhurst / Cathedral Ward",
+        tasks: [
+          { id: "cainhurst-crown", text: "Vezmi Crown of Illusions, nasaď si ji a jdi k trůnu za Logarius' Seat. Iluze zmizí a odhalí tajné dveře do Queen's Chamber. Crown neprodávej ani nevyhazuj." },
+          { id: "cainhurst-queen", text: "Projdi tajné dveře, vyjdi dlouhé schody a zapal lampu Queen's Chamber. Poklekni před Queen Annalise a přidej se k Vilebloods — dostaneš Corruption runu, Cainhurst Badge a gesto Respect." },
+          { id: "cainhurst-summons", text: "Na stolku napravo od trůnu vezmi Unopened Summons. Rozhodni se, jestli ho dáš Alfredovi, nebo ho necháš být." },
+          { id: "cainhurst-alfred", text: "Alfred není v Cainhurstu, dokud mu nedáš Unopened Summons. Najdeš ho v Cathedral Ward: u oltáře před Lower Chapel, po noci na balkoně nad vstupem do Forbidden Woods. Po předání dostaneš Wheel Hunter Badge a Church Bow (Male) a on odejde do Cainhurstu." },
+          { id: "cainhurst-alfred-rewards", text: "Po předání najdeš Alfreda v Queen's Chamber, kde zabil Annalise. Promluv s ním pro gesto Roar. Pak se vrať do Lower Chapel v Cathedral Ward, najdi jeho tělo a seber Radiance runu." },
+          { id: "cainhurst-queenly", text: "Pokud Annu zabije Alfred, vezmi z trůnu Queenly Flesh. Můžeš ji oživit v Altar of Despair u Ebrietas." }
+        ]
+      },
+      {
+        kind: "tasks",
+        title: "Před Amygdala (Nightmare Frontier)",
+        area: "Nightmare Frontier",
+        tasks: [
+          { id: "amygdala-tonsil", text: "Potřebuješ Tonsil Stone. V Cathedral Ward se nech chytit Lesser Amygdalou (cesta vlevo od Grand Cathedral / konec útesů). Teleportuje tě do Lecture Building." },
+          { id: "amygdala-lecture", text: "V Lecture Building (1F) vezmi Lecture Theatre Key a v truhle za Lecture Theatre 2 Augur of Ebrietas. Z 1. patra projdi do Nightmare Frontier." },
+          { id: "amygdala-frenzy", text: "Vezmi Sedatives a obleč si frenzy rezistenci. Winter Lanterns a frenzy jsou v Nightmare Frontier smrtelné." }
+        ]
+      },
+      {
+        kind: "boss",
+        title: "Amygdala",
+        area: "Nightmare Frontier",
+        optional: true,
+        note: "Volitelná. Pokud jsi ještě neotevřel Nightmare Frontier, udělej to přes Tonsil Stone.",
+        tips: [
+          "Sekej do rukou a při strhnutí bij do hlavy.",
+          "Pozor na skok a dálkové útoky z hlavy."
+        ]
+      },
+      {
+        kind: "tasks",
+        title: "Před Celestial Emissary (Upper Cathedral Ward)",
+        area: "Upper Cathedral Ward",
+        tasks: [
+          { id: "celestial-key", text: "Upper Cathedral Key z Yahar'gul Chapel odemkne Upper Cathedral Ward." },
+          { id: "celestial-orphanage", text: "V Upper Cathedral Ward vezmi Orphanage Key od Brainsuckera na 2. patře. Odemkne Orphanage." },
+          { id: "celestial-loot", text: "Projdi Upper Cathedral Ward a Orphanage důkladně. Vezmi Choir Set a další loot; pozor na Brainsuckery (frenzy a insight drain)." },
+          { id: "celestial-ebrietas", text: "Po Celestial Emissary rozbij okno v aréně. Na Grand Cathedral Walkways cestou k Altar of Despair vezmi z mrtvoly A Call Beyond a dojdi k Ebrietas." }
+        ]
+      },
+      {
+        kind: "boss",
+        title: "Celestial Emissary",
+        area: "Upper Cathedral Ward",
+        optional: true,
+        note: "Volitelný. Po něm se otevře cesta k Ebrietas přes rozbité okno.",
+        tips: [
+          "Zaměř se na velkého Emissaryho. Malé modré nepřátele čisti, ať tě neobklíčí.",
+          "Blesk a Tonitrus jsou proti kin efektivní."
+        ]
+      },
+      {
+        kind: "tasks",
+        title: "Před Micolash, Host of the Nightmare",
+        area: "Nightmare of Mensis",
+        tasks: [
+          { id: "micolash-upper", text: "Máš hotový Upper Cathedral Ward? Po Micolashovi se posune endgame, ale oblast zůstává přístupná." },
+          { id: "micolash-blood-rock", text: "V Nightmare of Mensis (Mergo's Loft: Middle) je Blood Rock pro +10 zbraň. Nenech si ho ujít." },
+          { id: "micolash-prep", text: "Vezmi Sedatives a frenzy rezistenci; Winter Lanterns jsou smrtelné. Na Micolashe si vezmi Poison Knives — výrazně to usnadní honičku." }
+        ]
+      },
+      {
+        kind: "boss",
+        title: "Micolash, Host of the Nightmare",
+        area: "Nightmare of Mensis",
+        note: "Po Micolashovi se Arianna přesune do kanálů — jdi pro její cord.",
+        tips: [
+          "Micolash utíká mezi místnostmi. Chase ho a nenech se zabít jeho A Call Beyond.",
+          "V poslední místnosti ho dotlač do rohu a bij. Poison Knives fungují."
+        ]
+      },
+      {
+        kind: "tasks",
+        title: "Po Micolashovi",
+        deadline: "Před finále",
+        area: "Cathedral Ward / Nightmare of Mensis",
+        tasks: [
+          { id: "micolash-arianna-cord", text: "Jdi do Cathedral Ward, dolů po schodech a žebříku do kanálů. Arianna tam porodila Celestial Child — zabij dítě a vezmi One Third of Umbilical Cord (Arianna umře)." },
+          { id: "micolash-cords", text: "Zkontroluj, že máš 3 cords: Mergo (drop), Abandoned Workshop, Arianna, Iosefka. Potřebuješ 3 ze 4." },
+          { id: "micolash-blood-rock-late", text: "Pokud jsi ještě nevzal Blood Rock v Nightmare of Mensis, udělej to teď." },
+          { id: "micolash-backup", text: "Před finálním rozhovorem s Gehrmanem si zálohuj save, pokud chceš vidět všechny endingy. DLC a vedlejší oblasti jsou teď poslední šance." }
+        ]
+      },
+      {
+        kind: "tasks",
+        title: "DLC: The Old Hunters – vstup",
+        deadline: "Po Amelii, ideálně po Mergo",
+        area: "Hunter's Nightmare",
+        dlc: true,
+        tasks: [
+          { id: "dlc-eye", text: "Po Amelii a doteku lebky se v Hunter's Dream objeví Eye of a Blood-drunk Hunter. Vezmi ho." },
+          { id: "dlc-enter", text: "Z Oedon Chapel vyjdi levými dveřmi k studni a nech se chytit Lesser Amygdalou. Přenese tě do Hunter's Nightmare." },
+          { id: "dlc-level", text: "Doporučeně BL 80+ a zbraň +9. DLC je nejtěžší část hry — jdeš-li dřív, počítej s bolestí." },
+          { id: "dlc-simon", text: "Mluv se Simonem a projdi Hunter's Nightmare. Najdi Eye Pendant — odemkne cestu dál." }
+        ]
+      },
+      {
+        kind: "boss",
+        title: "Ludwig the Accursed / Holy Blade",
+        area: "Hunter's Nightmare",
+        optional: true,
+        dlc: true,
+        note: "První DLC boss. Po něm projdi Research Hall a najdi Laurence's Skull.",
+        tips: [
+          "První fáze: útoč na nohy a používej oheň.",
+          "Druhá fáze: pozor na meč a výbuchy. Drž se blízko a trestuj po dodge."
+        ]
+      },
+      {
+        kind: "tasks",
+        title: "DLC: Research Hall – před Laurence",
+        deadline: "Před Laurence",
+        area: "Research Hall",
+        dlc: true,
+        tasks: [
+          { id: "dlc-skull", text: "V Research Hall najdi Laurence's Skull. Je na tajném oltáři v Recovery Room — cesta vede přes 1. Floor Balcony." },
+          { id: "dlc-laurence-unlock", text: "Vrať se do Nightmare Grand Cathedral k oltáři, kde jsi vzal Eye Pendant, a použij skull. Odemkne Laurence." },
+          { id: "dlc-adeline", text: "Mluv s Adeline v Research Hall a plň její Brain Fluid quest. Odmění tě Balcony Key a Milkweed runou." },
+          { id: "dlc-simon2", text: "Mluv se Simonem v každé lokaci. Nakonec ti dá Underground Cell Inner Chamber Key. Projdi Research Hall důkladně — je tu hodně lootu." }
+        ]
+      },
+      {
+        kind: "boss",
+        title: "Laurence, the First Vicar",
+        area: "Nightmare Grand Cathedral",
+        optional: true,
+        dlc: true,
+        note: "Volitelný DLC boss. Dropne Beast's Embrace runu (proměna v beast).",
+        tips: [
+          "Vezmi Charred Hunter Set — Laurence dělá hodně fire damage.",
+          "Útoč na nohy, pozor na výbuchy a běsnění. V druhé fázi se drž u boků a healuj včas."
+        ]
+      },
+      {
+        kind: "boss",
+        title: "Living Failures",
+        area: "Research Hall",
+        optional: true,
+        dlc: true,
+        note: "Po nich dostaneš Astral Clocktower Key. Odemkne Lady Marii.",
+        tips: [
+          "Zabíjej je jednoho po druhém a používej sloupy jako kryt.",
+          "Nenech je dokončit summon meteoritů — tlač na jednoho."
+        ]
+      },
+      {
+        kind: "boss",
+        title: "Lady Maria of the Astral Clocktower",
+        area: "Astral Clocktower",
+        optional: true,
+        dlc: true,
+        note: "Po Marii vezmi Celestial Dial a jdi do Fishing Hamlet.",
+        tips: [
+          "Parry je klíč. První fáze je čitelná.",
+          "Ve třetí fázi má krevní útoky — drž se dál a trestuj po skončení komba."
+        ]
+      },
+      {
+        kind: "boss",
+        title: "Orphan of Kos",
+        area: "Fishing Hamlet",
+        optional: true,
+        dlc: true,
+        note: "Poslední DLC boss. Ve Fishing Hamlet si vezmi Rakuyo ze studny (dva žraloci) a projdi Simonův quest.",
+        tips: [
+          "První fáze: parry a punish. Druhá fáze je agresivní.",
+          "Pozor na skoky a krevní projektily. Neboj se ustoupit."
+        ]
+      },
+      {
+        kind: "tasks",
+        title: "Před Ebrietas",
+        area: "Altar of Despair",
+        tasks: [
+          { id: "ebrietas-window", text: "Cesta k Ebrietas je za rozbitým oknem v aréně Celestial Emissary. Projdi Altar of Despair." },
+          { id: "ebrietas-revive", text: "V Altar of Despair můžeš oživit Annalise, pokud ji Alfred zabil. Queenly Flesh vezmi z jejího trůnu po smrti." },
+          { id: "ebrietas-prep", text: "Ebrietas je těžká. Vezmi +8 zbraň, hodně Blood Vials a projdi Upper Cathedral Ward/Orphanage důkladně." }
+        ]
+      },
+      {
+        kind: "boss",
+        title: "Ebrietas, Daughter of the Cosmos",
+        area: "Altar of Despair",
+        optional: true,
+        note: "Volitelná. Jedna z nejtěžších bossů v základní hře.",
+        tips: [
+          "Drž se u jejího boku a útoč na tělo. Vyhýbej se laseru.",
+          "Pozor na charge a oslnivé útoky z hlavy."
+        ]
+      },
+      {
+        kind: "tasks",
+        title: "Před Mergo's Wet Nurse",
+        area: "Nightmare of Mensis",
+        tasks: [
+          { id: "mergo-cords", text: "Máš 3 One Third of Umbilical Cord? Mergo ti dropne čtvrtou. Použij 3 před Gehrmanem." },
+          { id: "mergo-side", text: "DLC a vedlejší oblasti dokonči teď. Po Mergo je konec blízko. Blood Rock v Mergo's Loft: Middle je +10 zbraň." },
+          { id: "mergo-prep", text: "Pozor na Winter Lanterns a frenzy. Vezmi Sedatives a zálohuj save před finální volbou." }
+        ]
+      },
+      {
+        kind: "boss",
+        title: "Mergo's Wet Nurse",
+        area: "Nightmare of Mensis",
+        note: "Dropne One Third of Umbilical Cord. Po ní se Hunter's Dream zapálí a Gehrman čeká.",
+        tips: [
+          "Fáze s mlhou: jen utíkej a vyhýbej se útokům.",
+          "Když zmizí, poslouchej zvuk a drž se u okraje. Nenech se zahnat do rohu."
+        ]
+      },
+      {
+        kind: "tasks",
+        title: "Finále: před Gehrmanem",
+        deadline: "Před finální volbou",
+        area: "Hunter's Dream",
+        tasks: [
+          { id: "end-cords", text: "Použij 3 One Third of Umbilical Cord v inventáři. Odemkne Moon Presence a pravý ending." },
+          { id: "end-save", text: "Zálohuj save (cloud/USB), pokud chceš vidět všechny 3 endingy." },
+          { id: "end-choice", text: "Rozhovor s Gehrmanem: Submit = ending 1; Refuse = fight Gehrman; s použitými cords po Gehrmanovi = Moon Presence." },
+          { id: "end-prep", text: "Doplň Blood Vials, Quicksilver Bullets a oprav zbraň. DLC a všechny vedlejší oblasti musí být hotové před finální volbou." }
+        ]
+      },
+      {
+        kind: "boss",
+        title: "Gehrman, the First Hunter",
+        area: "Hunter's Dream",
+        note: "Poslední povinný boss. Po něm můžeš hru dokončit.",
+        tips: [
+          "Parry je klíč — jeho scythe komba jsou čitelná.",
+          "Pozor na gun shots a druhou fázi. Drž se střední vzdálenosti."
+        ]
+      },
+      {
+        kind: "boss",
+        title: "Moon Presence",
+        area: "Hunter's Dream",
+        ending: true,
+        note: "Ending-specific: potřebuješ 3 použité cords před Gehrmanem. Pokud jsi to neudělal, nedostaneš ho.",
+        tips: [
+          "Pozor na červené orby a grab. Drž se blízko a sekej.",
+          "Není tak těžký jako Gehrman, ale nenech se uspat."
+        ]
+      }
+    ];
+
+    const timeline = document.getElementById("timeline");
+    const progressFill = document.getElementById("progressFill");
+    const progressText = document.getElementById("progressText");
+    const progressDetail = document.getElementById("progressDetail");
+    const progressBar = document.getElementById("progressBar");
+    const hideDoneInput = document.getElementById("hideDone");
+    const resetBtn = document.getElementById("resetBtn");
+    const toTop = document.getElementById("toTop");
+
+    const bossCount = STEPS.filter((step) => step.kind === "boss").length;
+    const taskCount = STEPS.reduce((sum, step) => sum + (step.tasks ? step.tasks.length : 0), 0);
+
+    let state = loadState();
+    let filter = "all";
+    let hideDone = false;
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return {};
+        const parsed = JSON.parse(raw);
+        return parsed && typeof parsed === "object" ? parsed : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch {
+        /* Soukromý režim nebo plný storage — checklist funguje dál bez ukládání. */
+      }
+    }
+
+    function isDone(id) {
+      return Boolean(state[id]);
+    }
+
+    function allIds() {
+      const ids = [];
+      STEPS.forEach((step) => {
+        if (step.kind === "boss") ids.push(step.id || bossId(step));
+        if (step.tasks) step.tasks.forEach((task) => ids.push(task.id));
+      });
+      return ids;
+    }
+
+    function bossId(step) {
+      return "boss-" + slug(step.title);
+    }
+
+    function slug(value) {
+      return value
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+    }
+
+    function renderBoss(step, number) {
+      const id = step.id || bossId(step);
+      const tags = [];
+      if (step.ending) {
+        tags.push('<span class="tag ending">Ending</span>');
+      } else if (step.optional) {
+        tags.push('<span class="tag optional">Volitelný</span>');
+      } else {
+        tags.push('<span class="tag required">Povinný</span>');
+      }
+      if (step.dlc) tags.push('<span class="tag dlc">DLC</span>');
+
+      const tips = step.tips && step.tips.length
+        ? '<ul class="tips">' + step.tips.map((tip) => "<li>" + tip + "</li>").join("") + "</ul>"
+        : "";
+
+      return (
+        '<li class="step boss-step" data-kind="boss" data-dlc="' + (step.dlc ? "true" : "false") + '" data-boss-id="' + id + '">' +
+          '<div class="marker"><span class="node-boss">' + String(number).padStart(2, "0") + "</span></div>" +
+          '<div class="content">' +
+            '<article class="card boss-card">' +
+              '<div class="boss-top">' +
+                "<div>" +
+                  '<div class="tags">' + tags.join("") + "</div>" +
+                  "<h2>" + step.title + "</h2>" +
+                  '<div class="area">' + step.area + "</div>" +
+                "</div>" +
+                '<label class="boss-check">' +
+                  '<input type="checkbox" data-id="' + id + '" aria-label="Poraženo: ' + step.title + '"' + (isDone(id) ? " checked" : "") + ">" +
+                  '<span class="checkmark" aria-hidden="true"></span>' +
+                  "<span>Poraženo</span>" +
+                "</label>" +
+              "</div>" +
+              '<p class="note">' + step.note + "</p>" +
+              tips +
+            "</article>" +
+          "</div>" +
+        "</li>"
+      );
+    }
+
+    function renderTasks(step) {
+      const tasks = step.tasks.map((task) => {
+        return (
+          '<label class="task" data-task-id="' + task.id + '">' +
+            '<input type="checkbox" data-id="' + task.id + '"' + (isDone(task.id) ? " checked" : "") + ">" +
+            '<span class="checkmark" aria-hidden="true"></span>' +
+            '<span class="task-text">' + task.text + "</span>" +
+          "</label>"
+        );
+      }).join("");
+
+      const deadline = step.deadline
+        ? '<span class="deadline">Deadline: ' + step.deadline + "</span>"
+        : "";
+      const intro = step.intro
+        ? '<p class="note">' + step.intro + "</p>"
+        : "";
+
+      return (
+        '<li class="step task-step" data-kind="tasks" data-dlc="' + (step.dlc ? "true" : "false") + '">' +
+          '<div class="marker"><span class="node-task" aria-hidden="true"></span></div>' +
+          '<div class="content">' +
+            '<div class="card">' +
+              '<div class="group-head">' +
+                '<span class="group-kicker">Neminuout</span>' +
+                "<h2>" + step.title + "</h2>" +
+                deadline +
+                (step.area ? '<span class="area">' + step.area + "</span>" : "") +
+              "</div>" +
+              intro +
+              '<div class="tasks">' + tasks + "</div>" +
+            "</div>" +
+          "</div>" +
+        "</li>"
+      );
+    }
+
+    function render() {
+      let bossNumber = 0;
+      timeline.innerHTML = STEPS.map((step) => {
+        if (step.kind === "boss") {
+          bossNumber += 1;
+          return renderBoss(step, bossNumber);
+        }
+        return renderTasks(step);
+      }).join("");
+
+      updateProgress();
+      updateDoneStyles();
+      applyFilters();
+    }
+
+    function updateProgress() {
+      const ids = allIds();
+      const done = ids.filter(isDone).length;
+      const percent = ids.length ? Math.round((done / ids.length) * 100) : 0;
+
+      const bossDone = STEPS
+        .filter((step) => step.kind === "boss")
+        .filter((step) => isDone(step.id || bossId(step))).length;
+
+      const taskDone = STEPS
+        .filter((step) => step.tasks)
+        .reduce((sum, step) => sum + step.tasks.filter((task) => isDone(task.id)).length, 0);
+
+      progressFill.style.width = percent + "%";
+      progressText.textContent = done + " / " + ids.length + " hotovo";
+      progressDetail.textContent = "Bossové " + bossDone + "/" + bossCount + " · Neminuout " + taskDone + "/" + taskCount;
+      progressBar.setAttribute("aria-valuenow", String(percent));
+    }
+
+    function updateDoneStyles() {
+      document.querySelectorAll(".step").forEach((step) => {
+        if (step.dataset.kind === "boss") {
+          step.classList.toggle("is-done", isDone(step.dataset.bossId));
+          return;
+        }
+
+        const ids = Array.from(step.querySelectorAll("input[data-id]")).map((input) => input.dataset.id);
+        step.classList.toggle("is-done", ids.length > 0 && ids.every(isDone));
+      });
+    }
+
+    function applyFilters() {
+      document.querySelectorAll(".step").forEach((step) => {
+        const isDlc = step.dataset.dlc === "true";
+        let visible = filter === "all" || (filter === "nodlc" && !isDlc) || (filter === "dlc" && isDlc);
+
+        if (step.dataset.kind === "tasks") {
+          const tasks = Array.from(step.querySelectorAll(".task"));
+          tasks.forEach((task) => {
+            const hidden = hideDone && isDone(task.dataset.taskId);
+            task.classList.toggle("hidden", hidden);
+          });
+
+          if (hideDone) {
+            visible = visible && tasks.some((task) => !task.classList.contains("hidden"));
+          }
+        } else if (hideDone) {
+          visible = visible && !isDone(step.dataset.bossId);
+        }
+
+        step.classList.toggle("hidden", !visible);
+      });
+    }
+
+    function syncInputs() {
+      document.querySelectorAll("input[data-id]").forEach((input) => {
+        input.checked = isDone(input.dataset.id);
+      });
+    }
+
+    timeline.addEventListener("change", (event) => {
+      const input = event.target.closest('input[type="checkbox"]');
+      if (!input) return;
+
+      if (input.checked) {
+        state[input.dataset.id] = true;
+      } else {
+        delete state[input.dataset.id];
+      }
+
+      saveState();
+      updateProgress();
+      updateDoneStyles();
+    });
+
+    document.querySelectorAll("[data-filter]").forEach((button) => {
+      button.addEventListener("click", () => {
+        filter = button.dataset.filter;
+        document.querySelectorAll("[data-filter]").forEach((item) => {
+          item.classList.toggle("active", item === button);
+        });
+        applyFilters();
+      });
+    });
+
+    hideDoneInput.addEventListener("change", () => {
+      hideDone = hideDoneInput.checked;
+      applyFilters();
+    });
+
+    resetBtn.addEventListener("click", () => {
+      if (!window.confirm("Opravdu smazat celý postup?")) return;
+      state = {};
+      saveState();
+      syncInputs();
+      updateProgress();
+      updateDoneStyles();
+      applyFilters();
+    });
+
+    window.addEventListener("storage", (event) => {
+      if (event.key !== STORAGE_KEY) return;
+      state = loadState();
+      syncInputs();
+      updateProgress();
+      updateDoneStyles();
+      applyFilters();
+    });
+
+    window.addEventListener("scroll", () => {
+      toTop.classList.toggle("visible", window.scrollY > 600);
+    }, { passive: true });
+
+    toTop.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    render();
+  </script>
+</body>
+</html>
