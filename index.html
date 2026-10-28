@@ -1228,7 +1228,6 @@
         kind: "boss",
         title: "Micolash, Host of the Nightmare",
         area: "Nightmare of Mensis",
-        note: "Po Micolashovi se Arianna přesune do kanálů — jdi pro její cord.",
         tips: [
           "Micolash utíká mezi místnostmi. Chase ho a nenech se zabít jeho A Call Beyond.",
           "V poslední místnosti ho dotlač do rohu a bij. Poison Knives fungují."
@@ -1502,7 +1501,7 @@
                   "<span>Poraženo</span>" +
                 "</label>" +
               "</div>" +
-              '<p class="note">' + step.note + "</p>" +
+              (step.note ? '<p class="note">' + step.note + "</p>" : "") +
               tips +
             "</article>" +
           "</div>" +
