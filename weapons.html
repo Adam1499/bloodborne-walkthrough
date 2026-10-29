@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bloodborne – Lovcova zbrojnice</title>
+  <meta name="description" content="Výpis všech zbraní a hunter tools v Bloodborne: požadavky, scaling, damage a kde je sehnat.">
+  <style>
+    :root {
+      --bg: #0c0b0d;
+      --bg-soft: #120f13;
+      --panel: #1b161d;
+      --panel-2: #141014;
+      --text: #e7dfd2;
+      --muted: #9a8f86;
+      --blood: #a31f2b;
+      --blood-bright: #d64545;
+      --gold: #c9a86a;
+      --line: #3a2e35;
+      --ok: #7d9b6a;
+      --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+      --sans: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(900px 520px at 50% -8%, rgba(163, 31, 43, 0.20), transparent 62%),
+        radial-gradient(700px 480px at 85% 18%, rgba(201, 168, 106, 0.05), transparent 60%),
+        radial-gradient(800px 600px at 8% 55%, rgba(80, 20, 40, 0.12), transparent 65%),
+        var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.012) 0, rgba(255, 255, 255, 0.012) 1px, transparent 1px, transparent 4px),
+        radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.55) 100%);
+      opacity: 0.8;
+    }
+
+    a { color: var(--gold); }
+    a:hover { color: #e4cb95; }
+
+    .wrap {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding-bottom: 80px;
+    }
+
+    .hero {
+      padding: 64px 0 24px;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero .eyebrow {
+      margin: 0;
+      font-size: 0.68rem;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.9;
+    }
+
+    .hero h1 {
+      margin: 0.12em 0 0;
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: clamp(2.4rem, 7vw, 4.6rem);
+      line-height: 0.98;
+      letter-spacing: 0.12em;
+      text-indent: 0.12em;
+      color: #f0e7da;
+      text-shadow:
+        0 0 34px rgba(163, 31, 43, 0.30),
+        0 2px 0 rgba(0, 0, 0, 0.45);
+    }
+
+    .hero .subtitle {
+      max-width: 700px;
+      margin: 16px auto 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .hero .rule {
+      width: 140px;
+      height: 1px;
+      margin: 24px auto 18px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0.8;
+    }
+
+    .hero .back {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 6px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      text-decoration: none;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .hero .back:hover { color: var(--text); border-color: var(--gold); }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 20px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: #82766c;
+      font-size: 0.74rem;
+    }
+
+    .legend li { display: inline-flex; align-items: center; gap: 7px; }
+
+    .dot {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border: 1px solid;
+      border-radius: 50%;
+    }
+
+    .dot.trick { border-color: #a31f2b; background: rgba(163, 31, 43, 0.45); }
+    .dot.firearm { border-color: #c9a86a; background: rgba(201, 168, 106, 0.45); }
+    .dot.tool { border-color: #7f93c9; background: rgba(127, 147, 201, 0.45); }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 12px;
+      margin: 6px 0 22px;
+      padding: 14px 16px;
+      border: 1px solid rgba(201, 168, 106, 0.18);
+      border-radius: 14px;
+      background: rgba(12, 11, 13, 0.86);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.40);
+    }
+
+    .search { flex: 1 1 200px; }
+
+    .search input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #120f13;
+      color: var(--text);
+      font: inherit;
+      font-size: 0.85rem;
+    }
+
+    .search input::placeholder { color: #7e736a; }
+
+    .search input:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 1px;
+    }
+
+    .segmented {
+      display: inline-flex;
+      gap: 2px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #120f13;
+    }
+
+    .segmented button {
+      border: 0;
+      border-radius: 7px;
+      padding: 6px 10px;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 0.76rem;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .segmented button:hover { color: var(--text); }
+
+    .segmented button.active {
+      background: #2a1b20;
+      color: var(--text);
+      box-shadow: inset 0 0 0 1px rgba(201, 168, 106, 0.22);
+    }
+
+    .count {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 0.74rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .callout {
+      margin: 0 0 22px;
+      padding: 14px 16px;
+      border: 1px dashed rgba(201, 168, 106, 0.24);
+      border-radius: 12px;
+      background: rgba(201, 168, 106, 0.035);
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .callout strong { color: var(--gold); font-weight: 600; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .weapon-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 18px 18px 16px;
+      border: 1px solid rgba(201, 168, 106, 0.13);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(28, 23, 28, 0.92), rgba(18, 15, 19, 0.92));
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .weapon-card[hidden] { display: none; }
+
+    .wc-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .wc-head h2 {
+      margin: 0;
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 1.22rem;
+      line-height: 1.15;
+      color: #ece2d4;
+    }
+
+    .wc-cat {
+      display: inline-block;
+      margin-bottom: 6px;
+      padding: 2px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .wc-cat.trick { color: #d9a3a3; border-color: rgba(163, 31, 43, 0.45); background: rgba(163, 31, 43, 0.08); }
+    .wc-cat.firearm { color: #e0c9a0; border-color: rgba(201, 168, 106, 0.45); background: rgba(201, 168, 106, 0.08); }
+    .wc-cat.tool { color: #aebfe3; border-color: rgba(127, 147, 201, 0.45); background: rgba(80, 100, 160, 0.10); }
+
+    .tag {
+      display: inline-block;
+      flex-shrink: 0;
+      padding: 2px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      line-height: 1.5;
+    }
+
+    .tag.dlc {
+      color: #a9b7d6;
+      border-color: #3b4560;
+      background: rgba(80, 100, 160, 0.08);
+    }
+
+    .wc-desc {
+      margin: 0;
+      color: #c9beb2;
+      font-size: 0.85rem;
+    }
+
+    .wc-stats {
+      display: grid;
+      gap: 6px;
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: 80px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+    }
+
+    .stat-label {
+      padding-top: 2px;
+      color: var(--gold);
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .stat-value {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .chip {
+      display: inline-block;
+      padding: 1px 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #171217;
+      color: #cfc4b7;
+      font-size: 0.7rem;
+      line-height: 1.5;
+    }
+
+    .chip.grade-S, .chip.grade-A { color: var(--gold); border-color: rgba(201, 168, 106, 0.45); }
+    .chip.grade-B, .chip.grade-C { color: #c8bda9; }
+    .chip.grade-D, .chip.grade-E { color: #91877d; }
+
+    .where { color: #bdb1a4; font-size: 0.78rem; }
+
+    .wc-none { color: #7e736a; font-size: 0.72rem; }
+
+    .empty {
+      margin: 40px 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px 24px;
+      margin-top: 44px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: #756b63;
+      font-size: 0.72rem;
+    }
+
+    .to-top {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 40;
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: rgba(20, 16, 20, 0.92);
+      color: var(--gold);
+      font-size: 1.1rem;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, border-color 0.2s;
+    }
+
+    .to-top:hover { border-color: var(--gold); }
+    .to-top.visible { opacity: 1; pointer-events: auto; }
+
+    @media (max-width: 640px) {
+      .wrap { width: calc(100% - 24px); padding-bottom: 60px; }
+      .hero { padding: 44px 0 20px; }
+      .toolbar { padding: 12px; }
+      .grid { grid-template-columns: 1fr; }
+      .stat-row { grid-template-columns: 70px minmax(0, 1fr); }
+      .count { margin-left: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    @media print {
+      body { background: #fff; color: #111; }
+      body::before, .toolbar, .to-top, .footer, .legend, .callout { display: none; }
+      .wrap { width: 100%; padding: 0; }
+      .hero { padding: 0 0 16px; }
+      .hero h1 { color: #111; text-shadow: none; }
+      .hero .subtitle, .hero .eyebrow, .hero .back { color: #444; }
+      .weapon-card { background: #fff; border-color: #bbb; box-shadow: none; break-inside: avoid; }
+      .wc-desc, .stat-value, .where, .wc-head h2 { color: #111; }
+      .chip, .tag, .wc-cat { color: #333; border-color: #999; background: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <p class="eyebrow">Lovcova zbrojnice</p>
+      <h1>ZBROJNICE</h1>
+      <p class="subtitle">Všechny trick weapons, střelné zbraně a hunter tools. Požadavky, scaling, damage a kde je sehnat.</p>
+      <div class="rule" aria-hidden="true"></div>
+      <ul class="legend" aria-label="Legenda">
+        <li><span class="dot trick" aria-hidden="true"></span> Trick weapons</li>
+        <li><span class="dot firearm" aria-hidden="true"></span> Střelné</li>
+        <li><span class="dot tool" aria-hidden="true"></span> Hunter tools</li>
+        <li>26 + 16 + 12 položek</li>
+      </ul>
+      <a class="back" href="index.html">← Zpět na timeline</a>
+    </header>
+
+    <section class="toolbar" aria-label="Filtry zbraní">
+      <div class="search">
+        <input type="search" id="search" placeholder="Hledat zbraň…" aria-label="Hledat zbraň">
+      </div>
+      <div class="segmented" role="group" aria-label="Kategorie">
+        <button type="button" data-filter-cat="all" class="active">Vše</button>
+        <button type="button" data-filter-cat="trick">Trick</button>
+        <button type="button" data-filter-cat="firearm">Střelné</button>
+        <button type="button" data-filter-cat="tool">Nástroje</button>
+      </div>
+      <div class="segmented" role="group" aria-label="DLC">
+        <button type="button" data-filter-dlc="all" class="active">Vše</button>
+        <button type="button" data-filter-dlc="base">Bez DLC</button>
+        <button type="button" data-filter-dlc="dlc">Jen DLC</button>
+      </div>
+      <span class="count" id="count">0 / 0 zbraní</span>
+    </section>
+
+    <aside class="callout">
+      <strong>Hodnoty jsou základní (+0).</strong> Požadavky a scaling podle Bloodborne wiki. Uncanny a Lost varianty mají stejné staty, ale jiné gemy. Damage je base hodnota zbraně.
+    </aside>
+
+    <main>
+      <div class="grid" id="grid"></div>
+      <p class="empty" id="empty" hidden>Nic nenalezeno. Zkus jiný filtr nebo hledaný výraz.</p>
+    </main>
+
+    <footer class="footer">
+      <span>Data: <a href="https://bloodborne.wiki.fextralife.com/Weapons" target="_blank" rel="noopener">Bloodborne Wiki</a>. Požadavky a scaling jsou orientační.</span>
+      <span>Stránka je jen přehled; nic se neukládá.</span>
+    </footer>
+  </div>
+
+  <button type="button" class="to-top" id="toTop" aria-label="Zpět nahoru">↑</button>
+
+  <script>
+    const WEAPONS = [
+      { name: "Saw Cleaver", cat: "trick", dlc: false, req: { str: 8, skl: 7 }, scale: { str: "D", skl: "E", arc: "D" }, dmg: [["Physical", 90]], note: "Startovní a nejuniverzálnější zbraň. Serrated v obou formách, bonus proti beastům.", where: "Start (Messengers), později 1 000 echoes se Saw Hunter Badge." },
+      { name: "Saw Spear", cat: "trick", dlc: false, req: { str: 7, skl: 8 }, scale: { str: "D", skl: "D", arc: "D" }, dmg: [["Physical", 85]], note: "Serrated, výborný pro skill i quality build. Silný thrust v transformed formě.", where: "Tělo v Central Yharnam (kanály), nebo 1 000 echoes se Saw Hunter Badge." },
+      { name: "Hunter Axe", cat: "trick", dlc: false, req: { str: 9, skl: 8 }, scale: { str: "D", skl: "E", arc: "D" }, dmg: [["Physical", 98]], note: "Nejvyšší base damage ze starterů, dlouhý reach a spin (L2) na crowd.", where: "Start, nebo 1 100 echoes se Saw Hunter Badge." },
+      { name: "Threaded Cane", cat: "trick", dlc: false, req: { str: 7, skl: 9 }, scale: { str: "E", skl: "C", arc: "D" }, dmg: [["Physical", 78]], note: "Elegantní skill zbraň; whip forma dává dlouhý reach.", where: "Start, nebo 1 200 echoes se Saw Hunter Badge." },
+      { name: "Kirkhammer", cat: "trick", dlc: false, req: { str: 16, skl: 10 }, scale: { str: "C", skl: "E", arc: "D" }, dmg: [["Physical", 105]], note: "Rychlý meč + obří kladivo. Vysoký damage a stagger, strength build.", where: "3 000 echoes se Sword Hunter Badge." },
+      { name: "Ludwig's Holy Blade", cat: "trick", dlc: false, req: { str: 16, skl: 12 }, scale: { str: "D", skl: "D", arc: "D" }, dmg: [["Physical", 100]], note: "Quality zbraň (STR+SKL), výborný moveset a reach v greatsword formě.", where: "20 000 echoes se Radiant Sword Hunter Badge." },
+      { name: "Reiterpallasch", cat: "trick", dlc: false, req: { str: 8, skl: 12, blt: 10 }, scale: { str: "E", skl: "C", blt: "E", arc: "D" }, dmg: [["Physical", 75], ["Blood", 75]], note: "Rapír s pistolkou; transformed forma střílí. Bloodtinge scaling pro střely.", where: "Truhla v Cainhurst Castle (přízemí)." },
+      { name: "Rifle Spear", cat: "trick", dlc: false, req: { str: 10, skl: 11, blt: 9 }, scale: { str: "E", skl: "D", blt: "D", arc: "D" }, dmg: [["Physical", 85], ["Blood", 85]], note: "Kopí s puškou; thrust útoky a výstřel v transformed formě.", where: "4 000 echoes se Powder Keg Hunter Badge." },
+      { name: "Stake Driver", cat: "trick", dlc: false, req: { str: 18, skl: 9 }, scale: { str: "D", skl: "D", arc: "D" }, dmg: [["Physical", 85]], note: "Nabíjecí výbušný úder (charged R2) s obrovským burstem.", where: "8 000 echoes se Powder Keg Hunter Badge." },
+      { name: "Tonitrus", cat: "trick", dlc: false, req: { str: 12, skl: 8 }, scale: { str: "D", skl: "E", arc: "D" }, dmg: [["Physical", 80], ["Bolt", 40]], note: "Blesková zbraň; L1 buff přidá bolt damage. Silná proti Kin.", where: "Tělo v Hypogean Gaol, nebo 26 000 echoes se Spark Hunter Badge." },
+      { name: "Logarius' Wheel", cat: "trick", dlc: false, req: { str: 20, skl: 12, arc: 10 }, scale: { str: "C", arc: "D" }, dmg: [["Physical", 100], ["Arcane", 25]], note: "Arcane/STR zbraň; transformed wheel se točí a přidává arcane damage.", where: "13 000 echoes se Wheel Hunter Badge." },
+      { name: "Chikage", cat: "trick", dlc: false, req: { str: 10, skl: 14, blt: 12 }, scale: { str: "E", skl: "D", blt: "C", arc: "D" }, dmg: [["Physical", 92], ["Blood", 92]], note: "Bloodtinge zbraň; transformed forma škáluje z BLT a postupně drains HP.", where: "50 000 echoes se Cainhurst Badge." },
+      { name: "Blade of Mercy", cat: "trick", dlc: false, req: { str: 7, skl: 11 }, scale: { skl: "C", arc: "D" }, dmg: [["Physical", 60], ["Arcane", 30]], note: "Velmi rychlá skill zbraň; silná na visceraly a rychlá komba.", where: "40 000 echoes se Crow Hunter Badge (Eileen quest, nebo ji zabít)." },
+      { name: "Burial Blade", cat: "trick", dlc: false, req: { str: 10, skl: 12 }, scale: { str: "E", skl: "C", arc: "D" }, dmg: [["Physical", 80], ["Arcane", 30]], note: "Kosa s dlouhým reach a silným movesetem; arcane scaling.", where: "60 000 echoes po poražení Gehrmana." },
+      { name: "Beast Claw", cat: "trick", dlc: false, req: { str: 14, skl: 12 }, scale: { str: "D", skl: "E", arc: "D" }, dmg: [["Physical", 75]], note: "Beast zbraň; s Beast's Embrace runou se mění moveset.", where: "Ailing Loran Chalice (chalice dungeon)." },
+      { name: "Amygdalan Arm", cat: "trick", dlc: true, req: { str: 17, skl: 9 }, scale: { str: "C", skl: "E", arc: "D" }, dmg: [["Physical", 80], ["Arcane", 40]], note: "Obří paže s dlouhým reach a arcane damage; unikátní moveset.", where: "Hunter's Nightmare — jeskyně vpravo po budově, co bývala zkratka ke Cleric Beast." },
+      { name: "Beasthunter Saif", cat: "trick", dlc: true, req: { str: 9, skl: 11 }, scale: { str: "E", skl: "D", arc: "D" }, dmg: [["Physical", 90]], note: "Rychlá transformační zbraň s posunem vpřed/vzad.", where: "Hunter's Nightmare — oblast za Nightmare Cathedral." },
+      { name: "Beast Cutter", cat: "trick", dlc: true, req: { str: 11, skl: 9 }, scale: { str: "D", skl: "E", arc: "E" }, dmg: [["Physical", 92]], note: "Těžký serrated whip; transformed forma má obrovský reach.", where: "Hunter's Nightmare — ze schodů od Nightmare Cathedral lamp doprava nahoru." },
+      { name: "Boom Hammer", cat: "trick", dlc: true, req: { str: 14, skl: 8 }, scale: { str: "C", skl: "E", arc: "D" }, dmg: [["Physical", 90], ["Fire", 60]], note: "Kladivo s ohnivým buffem (L1); silné proti beastům.", where: "Hunter's Nightmare — dům, kde býval wheelchair gunner." },
+      { name: "Church Pick", cat: "trick", dlc: true, req: { str: 9, skl: 14 }, scale: { str: "E", skl: "D", arc: "D" }, dmg: [["Physical", 88]], note: "Rychlé thrust útoky a righteous bonus; kvalitní skill zbraň.", where: "Hunter's Nightmare — hunter v cele odemčené Underground Cell Key." },
+      { name: "Holy Moonlight Sword", cat: "trick", dlc: true, req: { str: 16, skl: 12, arc: 14 }, scale: { str: "D", skl: "D", arc: "C" }, dmg: [["Physical", 90], ["Arcane", 50]], note: "Ludwigova zbraň; transformed moonlight beam škáluje z ARC.", where: "Hunter's Nightmare — Underground Corpse Pile po Ludwigovi." },
+      { name: "Kos Parasite", cat: "trick", dlc: true, req: { arc: 20 }, scale: { arc: "A" }, dmg: [["Arcane", 30]], note: "Arcane zbraň pro Milkweed build; s runou mění moveset.", where: "Drop z Orphan of Kos." },
+      { name: "Rakuyo", cat: "trick", dlc: true, req: { str: 10, skl: 20 }, scale: { skl: "C", arc: "D" }, dmg: [["Physical", 82]], note: "Dvojité meče s velmi rychlým kombem; ikona skill buildu.", where: "Fishing Hamlet — dno studny (dva žraloci)." },
+      { name: "Simon's Bowblade", cat: "trick", dlc: true, req: { str: 8, skl: 15, blt: 9 }, scale: { skl: "C", blt: "C", arc: "D" }, dmg: [["Physical", 80], ["Blood", 80]], note: "Meč + luk; ranged blood útoky a cheese na některé bosse.", where: "Hunter's Nightmare — Harrowed Hunter u Lighthouse Hut." },
+      { name: "Bloodletter", cat: "trick", dlc: true, req: { str: 14, skl: 6, blt: 16 }, scale: { str: "C", blt: "B", arc: "D" }, dmg: [["Physical", 90], ["Blood", 90]], note: "Bloodtinge zbraň; transformed přidává blood damage a self-damage.", where: "Hunter's Nightmare — cely před Research Hall po zabití Bradora." },
+      { name: "Whirligig Saw", cat: "trick", dlc: true, req: { str: 18, skl: 12 }, scale: { str: "B", skl: "E", arc: "D" }, dmg: [["Physical", 95]], note: "Buzzsaw; držené L2 drtí bosse a skvěle buduje beasthood.", where: "Hunter's Nightmare — ze schodů u Nightmare Church dolů do kanálu s havrany." },
+
+      { name: "Hunter Pistol", cat: "firearm", dlc: false, req: { str: 7, skl: 9, blt: 5 }, scale: { blt: "D" }, dmg: [["Blood", 70]], qs: 1, note: "Startovní pistole, rychlý parry a nízká cena QS.", where: "Start, nebo 1 600 echoes se Saw Hunter Badge." },
+      { name: "Hunter Blunderbuss", cat: "firearm", dlc: false, req: { str: 7, skl: 9, blt: 5 }, scale: { blt: "D" }, dmg: [["Blood", 20]], qs: 1, note: "Startovní brokovnice, širší spread pro parry a stun.", where: "Start, nebo 1 700 echoes se Saw Hunter Badge." },
+      { name: "Repeating Pistol", cat: "firearm", dlc: false, req: { str: 10, skl: 11, blt: 8 }, scale: { blt: "D" }, dmg: [["Blood", 90]], qs: 2, note: "Dva výstřely na jedno použití, vyšší damage.", where: "Messengers se Sword Hunter Badge." },
+      { name: "Ludwig's Rifle", cat: "firearm", dlc: false, req: { str: 9, skl: 10, blt: 9 }, scale: { blt: "E" }, dmg: [["Blood", 20]], qs: 1, note: "Brokovnice s delším dostřelem a dobrým spreadem.", where: "10 000 echoes se Radiant Sword Hunter Badge." },
+      { name: "Evelyn", cat: "firearm", dlc: false, req: { str: 9, skl: 11, blt: 18 }, scale: { blt: "B" }, dmg: [["Blood", 60]], qs: 1, note: "Nejlepší pistole pro BLT build; scaling B.", where: "Cainhurst Castle (truhla), nebo 16 000 echoes s Cainhurst Badge." },
+      { name: "Piercing Rifle", cat: "firearm", dlc: true, req: { str: 9, skl: 10, blt: 9 }, scale: { blt: "D" }, dmg: [["Blood", 80]], qs: 1, note: "Prostřelí několik nepřátel v řadě.", where: "Messengers se Firing Hammer Badge." },
+      { name: "Flamesprayer", cat: "firearm", dlc: false, req: { skl: 8, arc: 8 }, scale: { arc: "D" }, dmg: [["Fire", 45]], qs: 1, note: "Plamenomet; silný proti beastům a na crowd.", where: "Od Gilberta po vstupu do Cathedral Ward; později 8 000 echoes s Radiant Sword Hunter Badge." },
+      { name: "Rosmarinus", cat: "firearm", dlc: false, req: { skl: 8, arc: 8 }, scale: { arc: "B" }, dmg: [["Arcane", 30]], qs: 1, note: "Arcane spray se scalingem B; dobrý proti Kin.", where: "Messengers s Cosmic Eye Watcher Badge." },
+      { name: "Cannon", cat: "firearm", dlc: false, req: { str: 30, skl: 13 }, scale: { blt: "E" }, dmg: [["Blood", 200]], qs: 12, note: "Obrovský jednorázový výstřel, vysoká cena QS.", where: "Forbidden Woods — trámy budovy." },
+      { name: "Church Cannon", cat: "firearm", dlc: true, req: { str: 27, blt: 16 }, scale: { blt: "E" }, dmg: [["Blood", 160]], qs: 10, note: "DLC cannon s nižší cenou QS a dobrým damage.", where: "Research Hall — výtah s Eye Pendant, truhla dole." },
+      { name: "Gatling Gun", cat: "firearm", dlc: true, req: { str: 28, skl: 12 }, scale: { blt: "E" }, dmg: [["Physical", 80]], qs: 1, note: "Kulomet; držením palby udržíš sustained damage.", where: "Hunter's Nightmare — jeskyně vpravo, drop z hunter." },
+      { name: "Fist of Gratia", cat: "firearm", dlc: true, req: { str: 7, skl: 9, blt: 5 }, scale: { str: "D" }, dmg: [["Physical", 60]], note: "Pěstní štítek bez QS; dobrý na stagger.", where: "Hunter's Nightmare — cela po Ludwigovi." },
+      { name: "Hunter's Torch", cat: "firearm", dlc: false, req: { str: 6 }, scale: { arc: "B" }, dmg: [["Fire", 50]], note: "Lepší pochodeň; svítí a pálí.", where: "Old Yharnam — tělo." },
+      { name: "Torch", cat: "firearm", dlc: false, req: { str: 6 }, scale: { arc: "D" }, dmg: [["Fire", 25]], note: "Základní pochodeň pro osvětlení.", where: "Central Yharnam — tělo." },
+      { name: "Loch Shield", cat: "firearm", dlc: true, req: { str: 11, skl: 8 }, scale: {}, dmg: [], note: "Štít, který tlumí arcane damage při blokování.", where: "Research Hall — platforma při vstupu, po páce dolů." },
+      { name: "Wooden Shield", cat: "firearm", dlc: false, req: { str: 8, skl: 8 }, scale: {}, dmg: [], note: "Dřevěný štít; blokuje fyzické útoky, ale nízká stabilita.", where: "Cathedral Ward — tělo." },
+
+      { name: "A Call Beyond", cat: "tool", dlc: false, req: { arc: 40 }, scale: { arc: "S" }, dmg: [], qs: 7, note: "Nova s mnoha arcane projektilmi; nejvyšší ARC požadavek (40).", where: "Upper Cathedral Ward — za rozbitým oknem po Celestial Emissary." },
+      { name: "Augur of Ebrietas", cat: "tool", dlc: false, req: { arc: 18 }, scale: { arc: "S" }, dmg: [], qs: 1, note: "Chapadla z ruky; stagger, parry zezadu a knockback.", where: "Lecture Building — truhla za Lecture Theatre 2." },
+      { name: "Beast Roar", cat: "tool", dlc: false, req: { arc: 15 }, scale: {}, dmg: [], qs: 2, note: "Odrazí okolní nepřátele i předměty.", where: "Forbidden Woods — dům u klecí s psy." },
+      { name: "Blacksky Eye", cat: "tool", dlc: true, req: { arc: 16 }, scale: { arc: "S" }, dmg: [], qs: 1, note: "Arcane meteor projektil na dálku.", where: "Research Hall — zahrada přes Balcony Key." },
+      { name: "Choir Bell", cat: "tool", dlc: false, req: { arc: 15 }, scale: { arc: "S" }, dmg: [], qs: 7, note: "Léčí a čistí statusy v okolí; funguje i v coopu.", where: "Mergo's Loft Middle." },
+      { name: "Empty Phantasm Shell", cat: "tool", dlc: false, req: { arc: 15 }, scale: {}, dmg: [], qs: 3, note: "Dočasně přidá zbrani arcane damage.", where: "Byrgenwerth — truhla u vstupu do lunaria." },
+      { name: "Executioner's Gloves", cat: "tool", dlc: false, req: { arc: 20 }, scale: { arc: "S" }, dmg: [], qs: 3, note: "Přivolá naváděné duchy na cíl.", where: "Cainhurst Castle — knihovna." },
+      { name: "Messenger's Gift", cat: "tool", dlc: false, req: { arc: 10 }, scale: {}, dmg: [], qs: 1, note: "Promění tě v messenger pro stealth.", where: "Nightmare Frontier." },
+      { name: "Old Hunter Bone", cat: "tool", dlc: false, req: { arc: 15 }, scale: {}, dmg: [], qs: 4, note: "Zrychlí roll a quickstep (Quickening).", where: "Abandoned Old Workshop — u náhrobku." },
+      { name: "Tiny Tonitrus", cat: "tool", dlc: false, req: { arc: 25 }, scale: { arc: "S" }, dmg: [], qs: 6, note: "Série bolt úderů před sebou.", where: "Yahar'gul — truhla u cely s Upper Cathedral Key." },
+      { name: "Accursed Brew", cat: "tool", dlc: true, req: { arc: 30 }, scale: { arc: "S" }, dmg: [], qs: 2, note: "Hodí prokletý lektvar s arcane AoE.", where: "Fishing Hamlet — NPC s Milkweed runou, nebo po posledním bossovi." },
+      { name: "Madaras Whistle", cat: "tool", dlc: false, req: { blt: 18 }, scale: { blt: "S" }, dmg: [], qs: 4, note: "Přivolá obřího hada; škáluje z BLT.", where: "Forbidden Woods — po zabití Valtr/NPC u lampy." }
+    ];
+
+    const CAT_LABEL = { trick: "Trick weapon", firearm: "Střelná", tool: "Hunter tool" };
+
+    const grid = document.getElementById("grid");
+    const emptyEl = document.getElementById("empty");
+    const countEl = document.getElementById("count");
+    const searchInput = document.getElementById("search");
+    const toTop = document.getElementById("toTop");
+
+    let activeCat = "all";
+    let activeDlc = "all";
+    let activeQuery = "";
+
+    function esc(value) {
+      return String(value).replace(/[&<>"]/g, function (char) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[char];
+      });
+    }
+
+    function norm(value) {
+      return String(value).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function chip(text) {
+      return '<span class="chip">' + esc(text) + "</span>";
+    }
+
+    function gradeChip(label, grade) {
+      return '<span class="chip grade-' + grade + '">' + label + " " + grade + "</span>";
+    }
+
+    function requirements(req) {
+      const defs = [["str", "STR"], ["skl", "SKL"], ["blt", "BLT"], ["arc", "ARC"]];
+      return defs
+        .filter(function (def) { return req[def[0]] > 0; })
+        .map(function (def) { return chip(def[1] + " " + req[def[0]]); })
+        .join("");
+    }
+
+    function scaling(scale) {
+      const defs = [["str", "STR"], ["skl", "SKL"], ["blt", "BLT"], ["arc", "ARC"]];
+      return defs
+        .filter(function (def) { return scale[def[0]]; })
+        .map(function (def) { return gradeChip(def[1], scale[def[0]]); })
+        .join("");
+    }
+
+    function damage(dmg) {
+      return dmg
+        .map(function (entry) { return chip(entry[0] + " " + entry[1]); })
+        .join("");
+    }
+
+    function statRow(label, value) {
+      return '<div class="stat-row"><span class="stat-label">' + label + '</span><span class="stat-value">' + value + "</span></div>";
+    }
+
+    function card(weapon) {
+      const req = requirements(weapon.req) || '<span class="wc-none">—</span>';
+      const scale = scaling(weapon.scale) || '<span class="wc-none">—</span>';
+      const dmg = damage(weapon.dmg);
+      const qs = weapon.qs !== undefined ? chip("QS " + weapon.qs) : "";
+      const dlc = weapon.dlc ? '<span class="tag dlc">DLC</span>' : "";
+      const search = esc(norm(weapon.name + " " + weapon.note + " " + weapon.where));
+
+      let rows = "";
+      rows += statRow("Požadavky", req);
+      rows += statRow("Scaling", scale);
+      if (dmg) rows += statRow("Damage", dmg);
+      if (qs) rows += statRow("QS", qs);
+      rows += statRow("Kde", '<span class="where">' + esc(weapon.where) + "</span>");
+
+      return (
+        '<article class="weapon-card" data-cat="' + weapon.cat + '" data-dlc="' + weapon.dlc + '" data-search="' + search + '">' +
+          '<div class="wc-head">' +
+            "<div>" +
+              '<span class="wc-cat ' + weapon.cat + '">' + CAT_LABEL[weapon.cat] + "</span>" +
+              "<h2>" + esc(weapon.name) + "</h2>" +
+            "</div>" +
+            dlc +
+          "</div>" +
+          '<p class="wc-desc">' + esc(weapon.note) + "</p>" +
+          '<div class="wc-stats">' + rows + "</div>" +
+        "</article>"
+      );
+    }
+
+    function apply() {
+      let shown = 0;
+      Array.prototype.forEach.call(grid.children, function (node) {
+        const matchCat = activeCat === "all" || node.dataset.cat === activeCat;
+        const matchDlc = activeDlc === "all" || String(node.dataset.dlc === "true") === String(activeDlc === "dlc");
+        const matchQuery = !activeQuery || node.dataset.search.indexOf(activeQuery) !== -1;
+        const visible = matchCat && matchDlc && matchQuery;
+        node.hidden = !visible;
+        if (visible) shown += 1;
+      });
+      countEl.textContent = shown + " / " + WEAPONS.length + " zbraní";
+      emptyEl.hidden = shown !== 0;
+    }
+
+    grid.innerHTML = WEAPONS.map(card).join("");
+
+    document.querySelectorAll("[data-filter-cat]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        activeCat = button.dataset.filterCat;
+        document.querySelectorAll("[data-filter-cat]").forEach(function (item) {
+          item.classList.toggle("active", item === button);
+        });
+        apply();
+      });
+    });
+
+    document.querySelectorAll("[data-filter-dlc]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        activeDlc = button.dataset.filterDlc;
+        document.querySelectorAll("[data-filter-dlc]").forEach(function (item) {
+          item.classList.toggle("active", item === button);
+        });
+        apply();
+      });
+    });
+
+    searchInput.addEventListener("input", function () {
+      activeQuery = norm(searchInput.value.trim());
+      apply();
+    });
+
+    window.addEventListener("scroll", function () {
+      toTop.classList.toggle("visible", window.scrollY > 600);
+    }, { passive: true });
+
+    toTop.addEventListener("click", function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    apply();
+  </script>
+</body>
+</html>
